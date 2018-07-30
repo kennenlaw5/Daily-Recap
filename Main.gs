@@ -28,7 +28,7 @@ function menuRefresh(){
   //Created By Kennen Lawrence
   var ss=SpreadsheetApp.getActiveSpreadsheet();
   var sheet=ss.getSheetByName("calc");
-  var range=sheet.getRange("K2");
+  var range=sheet.getRange("N2");
   var data=range.getValue();
   range.setValue(parseInt(data)+1);
 }
