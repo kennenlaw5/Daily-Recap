@@ -48,3 +48,41 @@ function getName(){
   Logger.log(name);
   return name;
 }
+
+function newMonth() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheets = ss.getSheets();
+  var current, range, pass;
+  var ignore = ["SNAPSHOT","calc"];
+  for(var i=0;i<sheets.length;i++){
+    pass = true;
+    current = sheets[i].getSheetName();
+    for(var j=0;j<ignore.length;j++){ if(current==ignore[j]){ pass = false; } }
+    if(pass){
+      current = ss.getSheetByName(current);
+      current.getRange(3, 2, current.getLastRow(), 9).setValue("");
+      current.getRange(3, 2, current.getLastRow(), 9).clearNote();
+      SpreadsheetApp.flush();
+      current.getRange(3, 12, current.getLastRow(), current.getLastColumn()-11).setValue("");
+      current.getRange(3, 12, current.getLastRow(), current.getLastColumn()-11).clearNote();
+      SpreadsheetApp.flush();
+    }
+  }
+  current=ss.getSheetByName(ignore[0]);
+  range = current.getRange(2, 1, 31, 2).getDisplayValues();
+  for(i=0;i<range.length;i++){
+    pass=parseInt(range[i][0].split("/")[1]);
+    if(pass<i || range[i][1]=="Sunday"){ ss.getSheetByName(sheets[i+1].getSheetName()).hideSheet(); }
+  }
+  menuRefresh();
+  ss.getSheetByName(ignore[1]).hideSheet();
+  updateTradePVR();
+}
+
+function updateTradePVR(){
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var ui = SpreadsheetApp.getUi();
+  var link = ui.prompt('Trade PVR Link', 'Please paste the link for the new Trade PVR sheet in the box below:', ui.ButtonSet.OK_CANCEL);
+  if(link.getSelectedButton()==ui.Button.CANCEL){ return; }
+  ss.getSheetByName('SNAPSHOT').getRange(39, 16).setValue('=IMPORTRANGE("'+link.getResponseText()+'","Info!A3:F6")');
+}
