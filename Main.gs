@@ -54,6 +54,16 @@ function newMonth() {
   var sheets = ss.getSheets();
   var current, range, pass;
   var ignore = ["SNAPSHOT","calc"];
+  
+//  Update the month to the next month
+  range = ss.getSheetByName(ignore[0]).getRange(2, 1);
+  current = range.getDisplayValue();
+  pass = parseInt(current.split("/")[0])+1;
+  if(pass>10){ current = pass + current.substring(2); }
+  else{ current = pass + current.substring(1); }
+  range.setValue(current);
+  
+  ss.getSheetByName()
   for(var i=0;i<sheets.length;i++){
     pass = true;
     current = sheets[i].getSheetName();
