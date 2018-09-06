@@ -53,7 +53,7 @@ function newMonth() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var sheets = ss.getSheets();
   var current, range, pass;
-  var ignore = ["SNAPSHOT","calc"];
+  var ignore = ["SNAPSHOT","calc","1st","2nd","3rd","4th","5th","6th"];
   
 //  Update the month to the next month
   range = ss.getSheetByName(ignore[0]).getRange(2, 1);
@@ -62,20 +62,20 @@ function newMonth() {
   if(pass>10){ current = pass + current.substring(2); }
   else{ current = pass + current.substring(1); }
   range.setValue(current);
-  
-  ss.getSheetByName()
   for(var i=0;i<sheets.length;i++){
     pass = true;
     current = sheets[i].getSheetName();
     for(var j=0;j<ignore.length;j++){ if(current==ignore[j]){ pass = false; } }
     if(pass){
       current = ss.getSheetByName(current);
+      current.showSheet();
       current.getRange(3, 2, current.getLastRow(), 9).setValue("");
       current.getRange(3, 2, current.getLastRow(), 9).clearNote();
       SpreadsheetApp.flush();
       current.getRange(3, 12, current.getLastRow(), current.getLastColumn()-11).setValue("");
       current.getRange(3, 12, current.getLastRow(), current.getLastColumn()-11).clearNote();
       SpreadsheetApp.flush();
+      ss.toast('Wiped sheet "' + current.getSheetName() +'"', 'Completed:');
     }
   }
   current=ss.getSheetByName(ignore[0]);
