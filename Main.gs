@@ -53,7 +53,7 @@ function newMonth() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var sheets = ss.getSheets();
   var current, range, pass;
-  var ignore = ["SNAPSHOT","calc","1st","2nd","3rd","4th","5th","6th"];
+  var ignore = ["SNAPSHOT","calc"];
   
 //  Update the month to the next month
   range = ss.getSheetByName(ignore[0]).getRange(2, 1);
