@@ -54,6 +54,7 @@ function newMonth() {
   var sheets = ss.getSheets();
   var current, range, pass;
   var ignore = ["SNAPSHOT","calc"];
+  var special = ['Deposit Log'];
   
 //  Update the month to the next month
   range = ss.getSheetByName(ignore[0]).getRange(2, 1);
@@ -65,7 +66,18 @@ function newMonth() {
   for(var i=0;i<sheets.length;i++){
     pass = true;
     current = sheets[i].getSheetName();
-    for(var j=0;j<ignore.length;j++){ if(current==ignore[j]){ pass = false; } }
+    for (var j = 0; j < ignore.length; j++) { if (current == ignore[j]) { pass = false; } }
+    if (pass) { 
+      if (current == special[j]) {
+        pass = false;
+        current = ss.getSheetByName(current);
+        current.showSheet();
+        current.getRange(3, 2, current.getLastRow(), 6).setValue("");
+        current.getRange(3, 2, current.getLastRow(), 6).clearNote();
+        SpreadsheetApp.flush();
+        ss.toast('Wiped sheet "' + current.getSheetName() +'"', 'Completed:');
+      }
+    }
     if(pass){
       current = ss.getSheetByName(current);
       current.showSheet();
@@ -82,7 +94,7 @@ function newMonth() {
   range = current.getRange(2, 1, 31, 2).getDisplayValues();
   for(i=0;i<range.length;i++){
     pass=parseInt(range[i][0].split("/")[1]);
-    if(pass<i || range[i][1]=="Sunday"){ ss.getSheetByName(sheets[i+1].getSheetName()).hideSheet(); }
+    if(pass<i || range[i][1]=="Sunday"){ ss.getSheetByName(sheets[i+2].getSheetName()).hideSheet(); }
   }
   menuRefresh();
   ss.getSheetByName(ignore[1]).hideSheet();
