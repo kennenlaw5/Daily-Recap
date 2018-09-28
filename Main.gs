@@ -66,8 +66,10 @@ function newMonth() {
   for(var i=0;i<sheets.length;i++){
     pass = true;
     current = sheets[i].getSheetName();
-    for (var j = 0; j < ignore.length; j++) { if (current == ignore[j]) { pass = false; } }
-    if (pass) { 
+    for (var j = 0; j < ignore.length; j++) {
+      if (current == ignore[j]) {
+        pass = false; 
+      }
       if (current == special[j]) {
         pass = false;
         current = ss.getSheetByName(current);
@@ -107,4 +109,29 @@ function updateTradePVR(){
   var link = ui.prompt('Trade PVR Link', 'Please paste the link for the new Trade PVR sheet in the box below:', ui.ButtonSet.OK_CANCEL);
   if(link.getSelectedButton()==ui.Button.CANCEL){ return; }
   ss.getSheetByName('SNAPSHOT').getRange(39, 16).setValue('=IMPORTRANGE("'+link.getResponseText()+'","Info!A3:F6")');
+}
+
+function protectRanges() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheets = ss.getSheets();
+  var range, protection, protections;
+  var ignore = ["SNAPSHOT","calc","Deposit Log","BROKER SHEET"];
+  var me = Session.getEffectiveUser();
+  for (var i = 0; i < sheets.length; i++) {
+    if (ignore.indexOf(sheets[i].getSheetName()) == -1) {
+      protections = ss.getSheetByName(sheets[i].getSheetName()).getProtections(SpreadsheetApp.ProtectionType.RANGE);
+      for (var j = 0; j < protections.length; j++) {
+        protection = protections[j];
+        if (protection.canEdit()) {
+          protection.remove();
+        }
+      }
+      SpreadsheetApp.flush();
+      range = ss.getSheetByName(sheets[i].getSheetName()).getRange("K:K");
+      protection = range.protect().setDescription('Using formulas! Do NOT delete entire rows. Instead only clear out the data.');
+      protection.removeEditors(protection.getEditors());
+      protection.addEditor(me);
+      SpreadsheetApp.flush();
+    }
+  }
 }
