@@ -101,6 +101,7 @@ function newMonth() {
   menuRefresh();
   ss.getSheetByName(ignore[1]).hideSheet();
   updateTradePVR();
+  updateDailyGoals();
 }
 
 function updateTradePVR(){
@@ -134,4 +135,41 @@ function protectRanges() {
       SpreadsheetApp.flush();
     }
   }
+}
+
+function fillFormulas() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheets = ss.getSheets();
+  var ignore = ["SNAPSHOT","calc","Deposit Log","BROKER SHEET"];
+  var sheet, range, values, formula, name;
+  var preFormula = "=SNAPSHOT!C";
+  var number = 2;
+  for (var i = 0; i < sheets.length; i++) {
+    name = sheets[i].getSheetName();
+    if (ignore.indexOf(name) == -1) {
+      Logger.log("Would edit " + name);
+      formula = preFormula + number;
+      number++;
+      Logger.log("Formula: " + formula);
+      sheet = ss.getSheetByName(name);
+      range = sheet.getRange(1, 11);
+      range.setValue(formula);
+    } else {
+      Logger.log("Would NOT edit " + name);
+    }
+  }
+}
+
+function updateDailyGoals () {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getSheetByName('SNAPSHOT');
+  var dailyGoals = [0, 15, 13, 17, 15, 25, 35];
+  var day = sheet.getRange(2, 1).getValue().getDay();
+  var values = [];
+  for (var i = 0; i < 31; i++) {
+    values[i] = [dailyGoals[day]];
+    if (day == 6) { day = 0; }
+    else { day++; }
+  }
+  sheet.getRange(2, 3, values.length).setValues(values);
 }
