@@ -6,10 +6,9 @@ function onOpen() {
   .addItem('SNAPSHOT', 'snapshot').addToUi();
   var month = new Date().getMonth();
   var sheetMonth = ss.getSheetByName('SNAPSHOT').getRange(2, 1).getValue().getMonth();
-  Logger.log(month + '\n' + sheetMonth);
   if (month == sheetMonth) {
     var day = new Date().getDate();
-    ss.setActiveSheet(ss.getSheets()[day+2]);
+    ss.setActiveSheet(ss.getSheets()[day+1]);
   }
   var message = 'The spreadsheet has loaded successfully! Have a great day!';
   var title = 'Complete!';
