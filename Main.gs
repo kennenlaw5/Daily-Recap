@@ -142,20 +142,27 @@ function fillFormulas() {
   var sheets = ss.getSheets();
   var ignore = ["SNAPSHOT","calc","Deposit Log","BROKER SHEET"];
   var sheet, range, values, formula, name;
-  var preFormula = "=SNAPSHOT!C";
+  var columns = [1,1,11];
+  var rows = [2,1,1];
+  var referenceColumns = ['A','B','C'];
+  
+  if (columns.length != rows.length || rows.length != referenceColumns.length) {
+    throw 'Arrays are not equal. Data is missing!';
+    return;
+  }
+  
+  var preFormula = "=SNAPSHOT!";
   var number = 2;
   for (var i = 0; i < sheets.length; i++) {
     name = sheets[i].getSheetName();
     if (ignore.indexOf(name) == -1) {
-      Logger.log("Would edit " + name);
-      formula = preFormula + number;
+      for (var j = 0; j < rows.length; j++) {
+        formula = preFormula + referenceColumns[j] + number;
+        sheet = ss.getSheetByName(name);
+        range = sheet.getRange(rows[j], columns[j]);
+        range.setValue(formula);
+      }
       number++;
-      Logger.log("Formula: " + formula);
-      sheet = ss.getSheetByName(name);
-      range = sheet.getRange(1, 11);
-      range.setValue(formula);
-    } else {
-      Logger.log("Would NOT edit " + name);
     }
   }
 }
