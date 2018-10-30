@@ -2,8 +2,15 @@ function onOpen() {
   //Created By Kennen Lawrence
   var ui = SpreadsheetApp.getUi();
   var ss = SpreadsheetApp.getActiveSpreadsheet();
-  ui.createMenu('Utilities').addSubMenu(ui.createMenu('Help').addItem('By Phone','menuItem1').addItem('By Email','menuItem2')).addItem('Refresh Menu Counts','menuRefresh').addToUi();
-  //.addItem('Reset Statistics','reset').addItem('Refresh CA Ranking','rank').addToUi();
+  ui.createMenu('Utilities').addSubMenu(ui.createMenu('Help').addItem('By Phone','menuItem1').addItem('By Email','menuItem2')).addItem('Refresh Menu Counts','menuRefresh')
+  .addItem('SNAPSHOT', 'snapshot').addToUi();
+  var month = new Date().getMonth();
+  var sheetMonth = ss.getSheetByName('SNAPSHOT').getRange(2, 1).getValue().getMonth();
+  Logger.log(month + '\n' + sheetMonth);
+  if (month == sheetMonth) {
+    var day = new Date().getDate();
+    ss.setActiveSheet(ss.getSheets()[day+2]);
+  }
   var message = 'The spreadsheet has loaded successfully! Have a great day!';
   var title = 'Complete!';
   ss.toast(message, title);
@@ -24,6 +31,12 @@ function menuItem2() {
     Logger.log('User cancelled');
   }
 }
+
+function snapshot() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  ss.setActiveSheet(ss.getSheetByName('SNAPSHOT'));
+}
+
 function menuRefresh(){
   //Created By Kennen Lawrence
   var ss=SpreadsheetApp.getActiveSpreadsheet();
