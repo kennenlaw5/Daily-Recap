@@ -202,7 +202,6 @@ function refreshDataValidation() {
         range = sheet.getRange(3, validationCols[j], sheet.getLastRow() - 2);
         range.setDataValidation(rule[j]);
       }
-      return;
     }
   }
 }
