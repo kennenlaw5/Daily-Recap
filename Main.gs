@@ -180,3 +180,29 @@ function updateDailyGoals () {
   }
   sheet.getRange(2, 3, values.length).setValues(values);
 }
+
+function refreshDataValidation() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheets = ss.getSheets();
+  var ignore = ["SNAPSHOT","calc","Deposit Log","BROKER SHEET"];
+  var validationCols = [3, 15, 21];
+  var referenceCols = [24, 26, 25];
+  var sheet, range, end, rule;
+  rule = [];
+  sheet = ss.getSheetByName('SNAPSHOT');
+  for (var i = 0; i < referenceCols.length; i++) {
+    range = sheet.getRange(2, referenceCols[i], sheet.getLastRow());
+    rule[i] = SpreadsheetApp.newDataValidation().requireValueInRange(range, true);
+  }
+  for (i = 0; i < sheets.length; i++) {
+    sheet = sheets[i].getSheetName();
+    if (ignore.indexOf(sheet) == -1) {
+      sheet = ss.getSheetByName(sheet);
+      for (var j = 0; j < validationCols.length; j++) {
+        range = sheet.getRange(3, validationCols[j], sheet.getLastRow() - 2);
+        range.setDataValidation(rule[j]);
+      }
+      return;
+    }
+  }
+}
