@@ -7,8 +7,14 @@ function onOpen() {
   var month = new Date().getMonth();
   var sheetMonth = ss.getSheetByName('SNAPSHOT').getRange(2, 1).getValue().getMonth();
   if (month == sheetMonth) {
+    ss.getSheetByName('SNAPSHOT').activate();
     var day = new Date().getDate();
-    ss.setActiveSheet(ss.getSheets()[day+1]);
+    var sheets = ss.getSheets();
+    var name;
+    for (var i = 0; i < sheets.length; i++) {
+      if (sheets[i].getSheetName().indexOf(day) != -1) { name = sheets[i].getSheetName(); }
+    }
+    if (name != undefined) { ss.getSheetByName(name).activate(); }
   }
   var message = 'The spreadsheet has loaded successfully! Have a great day!';
   var title = 'Complete!';
