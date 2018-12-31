@@ -8,6 +8,11 @@ function onOpen() {
   var sheetMonth = ss.getSheetByName('SNAPSHOT').getRange(2, 1).getValue().getMonth();
   if (month == sheetMonth) {
     ss.getSheetByName('SNAPSHOT').activate();
+    SpreadsheetApp.flush();
+    ss.getSheetByName('Deposit Log').activate();
+    SpreadsheetApp.flush();
+    ss.getSheetByName('SNAPSHOT').activate();
+    SpreadsheetApp.flush();
     var day = new Date().getDate();
     var sheets = ss.getSheets();
     var name;
@@ -16,9 +21,7 @@ function onOpen() {
     }
     if (name != undefined) { ss.getSheetByName(name).activate(); }
   }
-  var message = 'The spreadsheet has loaded successfully! Have a great day!';
-  var title = 'Complete!';
-  ss.toast(message, title);
+  ss.toast('The spreadsheet has loaded successfully! Have a great day!', 'Complete!');
   ss.getSheetByName("calc").hideSheet();
 }
 function menuItem1() {
@@ -46,7 +49,7 @@ function menuRefresh(){
   //Created By Kennen Lawrence
   var ss=SpreadsheetApp.getActiveSpreadsheet();
   var sheet=ss.getSheetByName("calc");
-  var range=sheet.getRange("N2");
+  var range=sheet.getRange("M2");
   var data=range.getValue();
   range.setValue(parseInt(data)+1);
 }
@@ -70,18 +73,20 @@ function getName(){
 function newMonth() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var sheets = ss.getSheets();
-  var current, range, pass;
+  var current, range, pass, year;
   var ignore = ["SNAPSHOT","calc"];
   var special = ['Deposit Log'];
   
 //  Update the month to the next month
   range = ss.getSheetByName(ignore[0]).getRange(2, 1);
   current = range.getDisplayValue();
-  pass = parseInt(current.split("/")[0])+1;
-  if(pass>10){ current = pass + current.substring(2); }
-  else{ current = pass + current.substring(1); }
+  pass = parseInt(current.split('/')[0]) + 1;
+  year = parseInt(current.split('/')[2])
+  if (pass > 12) { pass = 1; current = current.replace(year, year + 1); }
+  if (pass > 10) { current = pass + current.substring(2); }
+  else { current = pass + current.substring(1); }
   range.setValue(current);
-  for(var i=0;i<sheets.length;i++){
+  for (var i = 0; i < sheets.length; i++) {
     pass = true;
     current = sheets[i].getSheetName();
     for (var j = 0; j < ignore.length; j++) {
@@ -120,6 +125,8 @@ function newMonth() {
   ss.getSheetByName(ignore[1]).hideSheet();
   updateTradePVR();
   updateDailyGoals();
+  refreshDataValidation();
+  protectRanges();
 }
 
 function updateTradePVR(){
