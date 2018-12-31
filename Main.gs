@@ -79,12 +79,14 @@ function newMonth() {
   
 //  Update the month to the next month
   range = ss.getSheetByName(ignore[0]).getRange(2, 1);
-  current = range.getDisplayValue();
-  pass = parseInt(current.split('/')[0]) + 1;
-  year = parseInt(current.split('/')[2])
-  if (pass > 12) { pass = 1; current = current.replace(year, year + 1); }
-  if (pass > 10) { current = pass + current.substring(2); }
-  else { current = pass + current.substring(1); }
+  current = range.getDisplayValue().split('/');
+  
+  for (var i = 0; i < current.length; i++) { current[i] = parseInt(current[i], 10); }
+  
+  if (current[0] == 12) { current[0] = 1; current[2] += 1; } 
+  else { current[0] +=1; }
+  
+  current = current.join('/');
   range.setValue(current);
   for (var i = 0; i < sheets.length; i++) {
     pass = true;
