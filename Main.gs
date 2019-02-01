@@ -106,9 +106,10 @@ function newMonth() {
       }
     }
     if(pass){
+      Logger.log(current);
       current = ss.getSheetByName(current);
       current.showSheet();
-      current.getRange(3, 2, current.getLastRow(), 9).setValue("");
+      current.getRange(3, 2, current.getLastRow(), 9).setValue('');
       current.getRange(3, 2, current.getLastRow(), 9).clearNote();
       SpreadsheetApp.flush();
       current.getRange(3, 12, current.getLastRow(), current.getLastColumn()-11).setValue("");

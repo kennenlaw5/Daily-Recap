@@ -22,7 +22,7 @@ function snapshot31(x,y) {
           if(team=="Jeff Englert"){team=0;}
           else if(team=="Ben Brahler"){team=1;}
           else if(team=="Robb Ashby"){team=2;}
-          else if(team=="Seth Carmitchel"){team=3;}
+          else if(team=="Liz Liggett"){team=3;}
           else if(team=="Dean Wentland"){team=4;}
           else{team = 5;}
           if (range[j][0] == "N" && team !=5) { newCount[team] += 1; if (!isNaN(parseInt(range[j][12]))) { newF_I[team] += parseInt(range[j][12]); } }
@@ -63,7 +63,7 @@ function snapshot22(x,y) {
           if(team=="Jeff Englert"){team=0;}
           else if(team=="Ben Brahler"){team=1;}
           else if(team=="Robb Ashby"){team=2;}
-          else if(team=="Seth Carmitchel"){team=3;}
+          else if(team=="Liz Liggett"){team=3;}
           else if(team=="Dean Wentland"){team=4;}
           else{team = 5;}
           if(range[j][0]=="N"&&team!=5){newCount[team]+=1;if(!isNaN(parseInt(range[j][12]))){newF_I[team]+=parseInt(range[j][12]);}}
@@ -102,7 +102,7 @@ function snapshot15(x,y) {
           if(team=="Jeff Englert"){team=0;}
           else if(team=="Ben Brahler"){team=1;}
           else if(team=="Robb Ashby"){team=2;}
-          else if(team=="Seth Carmitchel"){team=3;}
+          else if(team=="Liz Liggett"){team=3;}
           else if(team=="Dean Wentland"){team=4;}
           else{team = 5;}
           if(range[j][0]=="N"&&team!=5){newCount[team]+=1;if(!isNaN(parseInt(range[j][12]))){newF_I[team]+=parseInt(range[j][12]);}}
@@ -139,7 +139,7 @@ function snapshot7(x,y) {
           if(team=="Jeff Englert"){team=0;}
           else if(team=="Ben Brahler"){team=1;}
           else if(team=="Robb Ashby"){team=2;}
-          else if(team=="Seth Carmitchel"){team=3;}
+          else if(team=="Liz Liggett"){team=3;}
           else if(team=="Dean Wentland"){team=4;}
           else{team = 5;}
           if(range[j][0]=="N"&&team!=5){newCount[team]+=1;if(!isNaN(parseInt(range[j][12]))){newF_I[team]+=parseInt(range[j][12]);}}
