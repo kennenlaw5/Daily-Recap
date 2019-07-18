@@ -23,16 +23,17 @@ function snapshot31 (x,y) {
       for (var j = 0; j < sheet.getLastRow() - 2; j++) {
         if (range[j][0] != '' && range[j][19] != '') {
           team = range[j][19];
+          team = team.toString().replace('-', ' ');
           
           if (range[j][22].toLowerCase().indexOf('yes') !== -1) { newCount[newCount.length - 1] ++; }
-          else if (range[j][22].toLowerCase() == 'no') { newF_I[newF_I.length - 1] ++; }
+          else if (range[j][22].toLowerCase() === 'no') { newF_I[newF_I.length - 1] ++; }
           
-          if (team == 'Merrie Thomsen')       { team = 0; }
-          else if (team == 'Ben Brahler')     { team = 1; }
-          else if (team == 'Robb Ashby')      { team = 2; }
-          else if (team == 'Joshua Buchanan') { team = 3; }
-          else if (team == 'Liz Liggett')     { team = 4; }
-          else                                { team = 5; }
+          if (team === 'Merrie Thomsen')        { team = 0; }
+          else if (team === 'Ben Brahler')      { team = 1; }
+          else if (team == 'Robb Ashby')        { team = 2; }
+          else if (team === 'Joshua Buchanan')  { team = 3; }
+          else if (team === 'Ace Taylor Brown') { team = 4; }
+          else                                  { team = 5; }
           
           if (range[j][0].toLowerCase() == 'n' && team != 5) { newCount[team] ++; if (!isNaN(parseInt(range[j][12]))) { newF_I[team] += parseInt(range[j][12]); } }
           else if (range[j][0].toLowerCase() == 'u' && team != 5) { usedCount[team] ++; if (!isNaN(parseInt(range[j][12]))){usedF_I[team] += parseInt(range[j][12]); } }
@@ -73,16 +74,17 @@ function snapshot22(x,y) {
       for (var j = 0; j < sheet.getLastRow() - 2; j++) {
         if (range[j][0] != '' && range[j][19] != '') {
           team = range[j][19];
+          team = team.toString().replace('-', ' ');
           
           if (range[j][22].toLowerCase().indexOf('yes') !== -1) { newCount[newCount.length - 1] ++; }
-          else if (range[j][22].toLowerCase() == 'no') { newF_I[newF_I.length - 1] ++; }
+          else if (range[j][22].toLowerCase() === 'no') { newF_I[newF_I.length - 1] ++; }
           
-          if (team == 'Merrie Thomsen')       { team = 0; }
-          else if (team == 'Ben Brahler')     { team = 1; }
-          else if (team == 'Robb Ashby')      { team = 2; }
-          else if (team == 'Joshua Buchanan') { team = 3; }
-          else if (team == 'Liz Liggett')     { team = 4; }
-          else                                { team = 5; }
+          if (team === 'Merrie Thomsen')        { team = 0; }
+          else if (team === 'Ben Brahler')      { team = 1; }
+          else if (team == 'Robb Ashby')        { team = 2; }
+          else if (team === 'Joshua Buchanan')  { team = 3; }
+          else if (team === 'Ace Taylor Brown') { team = 4; }
+          else                                  { team = 5; }
           
           if (range[j][0].toLowerCase() == 'n' && team != 5) { newCount[team] ++; if (!isNaN(parseInt(range[j][12]))) { newF_I[team] += parseInt(range[j][12]); } }
           else if (range[j][0].toLowerCase() == 'u' && team != 5) { usedCount[team] ++; if (!isNaN(parseInt(range[j][12]))){usedF_I[team] += parseInt(range[j][12]); } }
@@ -123,16 +125,17 @@ function snapshot15(x,y) {
       for (var j = 0; j < sheet.getLastRow() - 2; j++) {
         if (range[j][0] != '' && range[j][19] != '') {
           team = range[j][19];
+          team = team.toString().replace('-', ' ');
           
           if (range[j][22].toLowerCase().indexOf('yes') !== -1) { newCount[newCount.length - 1] ++; }
-          else if (range[j][22].toLowerCase() == 'no') { newF_I[newF_I.length - 1] ++; }
+          else if (range[j][22].toLowerCase() === 'no') { newF_I[newF_I.length - 1] ++; }
           
-          if (team == 'Merrie Thomsen')       { team = 0; }
-          else if (team == 'Ben Brahler')     { team = 1; }
-          else if (team == 'Robb Ashby')      { team = 2; }
-          else if (team == 'Joshua Buchanan') { team = 3; }
-          else if (team == 'Liz Liggett')     { team = 4; }
-          else                                { team = 5; }
+          if (team === 'Merrie Thomsen')        { team = 0; }
+          else if (team === 'Ben Brahler')      { team = 1; }
+          else if (team == 'Robb Ashby')        { team = 2; }
+          else if (team === 'Joshua Buchanan')  { team = 3; }
+          else if (team === 'Ace Taylor Brown') { team = 4; }
+          else                                  { team = 5; }
           
           if (range[j][0].toLowerCase() == 'n' && team != 5) { newCount[team] ++; if (!isNaN(parseInt(range[j][12]))) { newF_I[team] += parseInt(range[j][12]); } }
           else if (range[j][0].toLowerCase() == 'u' && team != 5) { usedCount[team] ++; if (!isNaN(parseInt(range[j][12]))){usedF_I[team] += parseInt(range[j][12]); } }
@@ -171,16 +174,17 @@ function snapshot7(x,y) {
       for (var j = 0; j < sheet.getLastRow() - 2; j++) {
         if (range[j][0] != '' && range[j][19] != '') {
           team = range[j][19];
+          team = team.toString().replace('-', ' ');
           
           if (range[j][22].toLowerCase().indexOf('yes') !== -1) { newCount[newCount.length - 1] ++; }
-          else if (range[j][22].toLowerCase() == 'no') { newF_I[newF_I.length - 1] ++; }
+          else if (range[j][22].toLowerCase() === 'no') { newF_I[newF_I.length - 1] ++; }
           
-          if (team == 'Merrie Thomsen')       { team = 0; }
-          else if (team == 'Ben Brahler')     { team = 1; }
-          else if (team == 'Robb Ashby')      { team = 2; }
-          else if (team == 'Joshua Buchanan') { team = 3; }
-          else if (team == 'Liz Liggett')     { team = 4; }
-          else                                { team = 5; }
+          if (team === 'Merrie Thomsen')        { team = 0; }
+          else if (team === 'Ben Brahler')      { team = 1; }
+          else if (team == 'Robb Ashby')        { team = 2; }
+          else if (team === 'Joshua Buchanan')  { team = 3; }
+          else if (team === 'Ace Taylor Brown') { team = 4; }
+          else                                  { team = 5; }
           
           if (range[j][0].toLowerCase() == 'n' && team != 5) { newCount[team] ++; if (!isNaN(parseInt(range[j][12]))) { newF_I[team] += parseInt(range[j][12]); } }
           else if (range[j][0].toLowerCase() == 'u' && team != 5) { usedCount[team] ++; if (!isNaN(parseInt(range[j][12]))){usedF_I[team] += parseInt(range[j][12]); } }
