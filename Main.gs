@@ -72,66 +72,58 @@ function getName() {
 }
 
 function newMonth() {
-  var current, range, pass, year;
-  var ss      = SpreadsheetApp.getActiveSpreadsheet();
-  var sheets  = ss.getSheets();
-  var ignore  = ['SNAPSHOT', 'calc', 'Master'];
-  var special = ['Deposit Log'];
+  var sheet, range, year, value;
+  var ss          = SpreadsheetApp.getActiveSpreadsheet();
+  var sheets      = ss.getSheets();
+  var ignore      = ['SNAPSHOT', 'calc', 'Master'];
+  var special     = ['Deposit Log'];
+  var master      = ss.getSheetByName('Master');
+  var formatRange = master.getRange(1, 1, master.getMaxRows(), master.getMaxColumns());
   
   // Update the month to the next month
-  range   = ss.getSheetByName(ignore[0]).getRange(2, 1);
-  current = range.getDisplayValue().split('/');
+  range  = ss.getSheetByName(ignore[0]).getRange(2, 1);
+  value = range.getDisplayValue().split('/');
   
-  for (var i = 0; i < current.length; i++) { current[i] = parseInt(current[i], 10); }
+  for (var i = 0; i < value.length; i++) { value[i] = parseInt(value[i], 10); }
   
-  if (current[0] === 12) {
-    current[0] = 1;
-    current[2] ++;
+  if (value[0] === 12) {
+    value[0] = 1;
+    value[2] ++;
   } else {
-    current[0] ++;
+    value[0] ++;
   }
   
-  current = current.join('/');
-  range.setValue(current);
+  value = value.join('/');
+  range.setValue(value);
   
   for (var i = 0; i < sheets.length; i++) {
-    pass    = true;
-    current = sheets[i].getSheetName();
+    sheet = sheets[i];
     
-    for (var j = 0; j < ignore.length; j++) {
-      if (current === ignore[j]) pass = false;
-      
-      if (current === special[j]) {
-        pass    = false;
-        current = ss.getSheetByName(current);
-        current.showSheet();
-        current.getRange(3, 2, current.getLastRow(), 6).setValue('');
-        current.getRange(3, 2, current.getLastRow(), 6).clearNote();
-        SpreadsheetApp.flush();
-        ss.toast('Wiped sheet "' + current.getSheetName() +'"', 'Completed:');
-      }
+    if (special.indexOf(sheet.getSheetName()) !== -1) {
+      sheet.showSheet();
+      sheet.getRange(3, 2, sheet.getLastRow(), 6).setValue('');
+      sheet.getRange(3, 2, sheet.getLastRow(), 6).clearNote();
+      ss.toast('Wiped sheet "' + sheet.getSheetName() +'"', 'Completed:');
     }
     
-    if (pass) {
-      current = ss.getSheetByName(current);
-      current.showSheet();
-      current.getRange(3, 2, current.getLastRow() - 2, 10).setValue('');
-      current.getRange(3, 2, current.getLastRow() - 2, 10).clearNote();
-      SpreadsheetApp.flush();
-      current.getRange(3, 13, current.getLastRow() - 2, current.getLastColumn() - 12).setValue('');
-      current.getRange(3, 13, current.getLastRow() - 2, current.getLastColumn() - 12).clearNote();
-      SpreadsheetApp.flush();
-      ss.toast('Wiped sheet "' + current.getSheetName() +'"', 'Completed:');
+    if (ignore.indexOf(sheet.getSheetName()) === -1) {
+      sheet.showSheet();
+      sheet.getRange(3, 2, sheet.getLastRow() - 2, 10).setValue('');
+      sheet.getRange(3, 2, sheet.getLastRow() - 2, 10).clearNote();
+      sheet.getRange(3, 13, sheet.getLastRow() - 2, sheet.getLastColumn() - 12).setValue('');
+      sheet.getRange(3, 13, sheet.getLastRow() - 2, sheet.getLastColumn() - 12).clearNote();
+      formatRange.copyFormatToRange(sheet, 1, master.getMaxColumns(), 1, master.getMaxRows());
+      ss.toast('Wiped sheet "' + sheet.getSheetName() +'"', 'Completed:');
     }
   }
   
-  current = ss.getSheetByName(ignore[0]);
-  range   = current.getRange(2, 1, 31, 2).getDisplayValues();
+  sheet = ss.getSheetByName(ignore[0]);
+  range = current.getRange(2, 1, 31, 2).getDisplayValues();
   
   for(i = 0; i < range.length; i++) {
-    pass = parseInt(range[i][0].split('/')[1]);
+    value = parseInt(range[i][0].split('/')[1]);
     
-    if (pass < i || range[i][1] === 'Sunday') ss.getSheetByName(sheets[i + 2].getSheetName()).hideSheet();
+    if (value < i || range[i][1] === 'Sunday') ss.getSheetByName(sheets[i + 2].getSheetName()).hideSheet();
   }
   
   menuRefresh();
