@@ -18,19 +18,19 @@ function snapshot31 (x,y) {
     sheetName = sheetNames[i];
     sheet     = ss.getSheetByName(sheetName);
     
-    if ( sheet != null) {
-      range = sheet.getRange('B3:X53').getValues();
+    if (sheet != null) {
+      range = sheet.getRange('C3:Z53').getValues();
       for (var j = 0; j < sheet.getLastRow() - 2; j++) {
         if (range[j][0] != '' && range[j][19] != '') {
           team = range[j][19];
           team = team.toString().replace('-', ' ');
           
-          if (range[j][22].toLowerCase().indexOf('yes') !== -1) { newCount[newCount.length - 1] ++; }
-          else if (range[j][22].toLowerCase() === 'no') { newF_I[newF_I.length - 1] ++; }
+          if (range[j][23].toLowerCase().indexOf('yes') !== -1) { newCount[newCount.length - 1] ++; }
+          else if (range[j][23].toLowerCase() === 'no') { newF_I[newF_I.length - 1] ++; }
           
           if (team === 'Merrie Thomsen')        { team = 0; }
           else if (team === 'Ben Brahler')      { team = 1; }
-          else if (team == 'Robb Ashby')        { team = 2; }
+          else if (team === 'Liz Liggett')      { team = 2; }
           else if (team === 'Joshua Buchanan')  { team = 3; }
           else if (team === 'Ace Taylor Brown') { team = 4; }
           else                                  { team = 5; }
@@ -70,18 +70,18 @@ function snapshot22(x,y) {
     sheet     = ss.getSheetByName(sheetName);
     
     if ( sheet != null) {
-      range = sheet.getRange('B3:X53').getValues();
+      range = sheet.getRange('C3:Z53').getValues();
       for (var j = 0; j < sheet.getLastRow() - 2; j++) {
         if (range[j][0] != '' && range[j][19] != '') {
           team = range[j][19];
           team = team.toString().replace('-', ' ');
           
-          if (range[j][22].toLowerCase().indexOf('yes') !== -1) { newCount[newCount.length - 1] ++; }
-          else if (range[j][22].toLowerCase() === 'no') { newF_I[newF_I.length - 1] ++; }
+          if (range[j][23].toLowerCase().indexOf('yes') !== -1) { newCount[newCount.length - 1] ++; }
+          else if (range[j][23].toLowerCase() === 'no') { newF_I[newF_I.length - 1] ++; }
           
           if (team === 'Merrie Thomsen')        { team = 0; }
           else if (team === 'Ben Brahler')      { team = 1; }
-          else if (team == 'Robb Ashby')        { team = 2; }
+          else if (team === 'Liz Liggett')      { team = 2; }
           else if (team === 'Joshua Buchanan')  { team = 3; }
           else if (team === 'Ace Taylor Brown') { team = 4; }
           else                                  { team = 5; }
@@ -121,18 +121,18 @@ function snapshot15(x,y) {
     sheet     = ss.getSheetByName(sheetName);
     
     if ( sheet != null) {
-      range = sheet.getRange('B3:X53').getValues();
+      range = sheet.getRange('C3:Z53').getValues();
       for (var j = 0; j < sheet.getLastRow() - 2; j++) {
         if (range[j][0] != '' && range[j][19] != '') {
           team = range[j][19];
           team = team.toString().replace('-', ' ');
           
-          if (range[j][22].toLowerCase().indexOf('yes') !== -1) { newCount[newCount.length - 1] ++; }
-          else if (range[j][22].toLowerCase() === 'no') { newF_I[newF_I.length - 1] ++; }
+          if (range[j][23].toLowerCase().indexOf('yes') !== -1) { newCount[newCount.length - 1] ++; }
+          else if (range[j][23].toLowerCase() === 'no') { newF_I[newF_I.length - 1] ++; }
           
           if (team === 'Merrie Thomsen')        { team = 0; }
           else if (team === 'Ben Brahler')      { team = 1; }
-          else if (team == 'Robb Ashby')        { team = 2; }
+          else if (team === 'Liz Liggett')      { team = 2; }
           else if (team === 'Joshua Buchanan')  { team = 3; }
           else if (team === 'Ace Taylor Brown') { team = 4; }
           else                                  { team = 5; }
@@ -170,18 +170,18 @@ function snapshot7(x,y) {
     sheet     = ss.getSheetByName(sheetName);
     
     if ( sheet != null) {
-      range = sheet.getRange('B3:X53').getValues();
+      range = sheet.getRange('C3:Z53').getValues();
       for (var j = 0; j < sheet.getLastRow() - 2; j++) {
         if (range[j][0] != '' && range[j][19] != '') {
           team = range[j][19];
           team = team.toString().replace('-', ' ');
           
-          if (range[j][22].toLowerCase().indexOf('yes') !== -1) { newCount[newCount.length - 1] ++; }
-          else if (range[j][22].toLowerCase() === 'no') { newF_I[newF_I.length - 1] ++; }
+          if (range[j][23].toLowerCase().indexOf('yes') !== -1) { newCount[newCount.length - 1] ++; }
+          else if (range[j][23].toLowerCase() === 'no') { newF_I[newF_I.length - 1] ++; }
           
           if (team === 'Merrie Thomsen')        { team = 0; }
           else if (team === 'Ben Brahler')      { team = 1; }
-          else if (team == 'Robb Ashby')        { team = 2; }
+          else if (team === 'Liz Liggett')      { team = 2; }
           else if (team === 'Joshua Buchanan')  { team = 3; }
           else if (team === 'Ace Taylor Brown') { team = 4; }
           else                                  { team = 5; }
@@ -200,4 +200,4 @@ function snapshot7(x,y) {
   return [newCount, newF_I, '', cpoCount, cpoF_I, '', usedCount, usedF_I];
 }
 //MGR=col 18; F_I=12; type=0
-//robb[0] mike[1] jeff[2] chris[3] dean[4]
+//[0] mike[1] jeff[2] chris[3] dean[4]

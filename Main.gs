@@ -115,11 +115,11 @@ function newMonth() {
     if (pass) {
       current = ss.getSheetByName(current);
       current.showSheet();
-      current.getRange(3, 2, current.getLastRow(), 9).setValue('');
-      current.getRange(3, 2, current.getLastRow(), 9).clearNote();
+      current.getRange(3, 2, current.getLastRow(), 10).setValue('');
+      current.getRange(3, 2, current.getLastRow(), 10).clearNote();
       SpreadsheetApp.flush();
-      current.getRange(3, 12, current.getLastRow(), current.getLastColumn() - 11).setValue('');
-      current.getRange(3, 12, current.getLastRow(), current.getLastColumn() - 11).clearNote();
+      current.getRange(3, 13, current.getLastRow(), current.getLastColumn() - 11).setValue('');
+      current.getRange(3, 13, current.getLastRow(), current.getLastColumn() - 11).clearNote();
       SpreadsheetApp.flush();
       ss.toast('Wiped sheet "' + current.getSheetName() +'"', 'Completed:');
     }
@@ -166,7 +166,7 @@ function protectRanges() {
         }
       }
       SpreadsheetApp.flush();
-      range = ss.getSheetByName(sheets[i].getSheetName()).getRange("K:K");
+      range = ss.getSheetByName(sheets[i].getSheetName()).getRange("L:L");
       protection = range.protect().setDescription('Using formulas! Do NOT delete entire rows. Instead only clear out the data.');
       protection.removeEditors(protection.getEditors());
       protection.addEditor(me);
@@ -180,9 +180,9 @@ function fillFormulas() {
   var sheets = ss.getSheets();
   var ignore = ["SNAPSHOT","calc","Deposit Log","BROKER SHEET"];
   var sheet, range, values, formula, name;
-  var columns = [1,1,11];
-  var rows = [2,1,1];
-  var referenceColumns = ['A','B','C'];
+  var columns = [1, 1, 12];
+  var rows = [2, 1, 1];
+  var referenceColumns = ['A', 'B', 'C'];
   
   if (columns.length != rows.length || rows.length != referenceColumns.length) {
     throw 'Arrays are not equal. Data is missing!';
@@ -190,9 +190,11 @@ function fillFormulas() {
   }
   
   var preFormula = "=SNAPSHOT!";
-  var number = 2;
+  var number     = 2;
+  
   for (var i = 0; i < sheets.length; i++) {
     name = sheets[i].getSheetName();
+    
     if (ignore.indexOf(name) == -1) {
       for (var j = 0; j < rows.length; j++) {
         formula = preFormula + referenceColumns[j] + number;
@@ -223,19 +225,21 @@ function refreshDataValidation() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var sheets = ss.getSheets();
   var ignore = ["SNAPSHOT","calc","Deposit Log","BROKER SHEET"];
-  var validationCols = [3, 15, 21];
+  var validationCols = [4, 16, 22];
   var referenceCols = [24, 26, 25];
   var sheet, range, end, rule;
   rule = [];
   sheet = ss.getSheetByName('SNAPSHOT');
+  
   for (var i = 0; i < referenceCols.length; i++) {
     range = sheet.getRange(2, referenceCols[i], sheet.getLastRow());
     rule[i] = SpreadsheetApp.newDataValidation().requireValueInRange(range, true);
   }
+  
   for (i = 0; i < sheets.length; i++) {
-    sheet = sheets[i].getSheetName();
-    if (ignore.indexOf(sheet) === -1) {
-      sheet = ss.getSheetByName(sheet);
+    sheet = sheets[i];
+    
+    if (ignore.indexOf(sheet.getSheetName()) === -1) {
       for (var j = 0; j < validationCols.length; j++) {
         range = sheet.getRange(3, validationCols[j], sheet.getLastRow() - 2);
         range.setDataValidation(rule[j]);
@@ -244,29 +248,57 @@ function refreshDataValidation() {
   }
 }
 
-function addNewColumn() {
+function refreshManagerValidation() {
   var ss          = SpreadsheetApp.getActiveSpreadsheet();
   var sheets      = ss.getSheets();
   var skip_sheets = ['SNAPSHOT', 'Deposit Log', 'BROKER SHEET', 'calc'];
   var sheet       = ss.getSheetByName('SNAPSHOT');
-  var range       = sheet.getRange(2, 24, sheet.getLastRow() - 1, 2);
+  var range       = sheet.getRange(2, 25, sheet.getLastRow() - 1);
   var rule        = SpreadsheetApp.newDataValidation()
                        .requireValueInRange(range, true)
-                       .setHelpText('Ignore the warning you recieve if entering a name that is not present in the dropdown.')
                        .build();
   
   for (var i = 0; i < sheets.length; i++) {
     sheet = sheets[i];
     
     if (skip_sheets.indexOf(sheet.getSheetName()) !== -1) continue;
-    
-    sheet.insertColumnAfter(24);
-    sheet.getRange(1, 24, sheet.getLastRow()).copyFormatToRange(sheet, 25, 25, 1, sheet.getLastRow());
-    sheet.getRange(2, 25).setValue('Temp Tag Deliverer');
-    sheet.getRange(3, 25, sheet.getLastRow() - 2).setDataValidation(rule);
+    range = sheet.getRange(3, 22, sheet.getLastRow() - 2)
+    range.setDataValidation(rule);
+    ss.toast(sheet.getSheetName(), sheet.getSheetName());
   }
 }
 
+function addNewColumn() {
+  var ss               = SpreadsheetApp.getActiveSpreadsheet();
+  var sheets           = ss.getSheets();
+  var skip_sheets      = ['SNAPSHOT', 'Deposit Log', 'BROKER SHEET', 'calc', '26th', '27th', '29th', '30th'];
+  var sheet            = ss.getSheetByName('26th');
+  var formatting       = sheet.getRange(1, 24, sheet.getLastRow());
+  var columnWidth      = sheet.getColumnWidth(2);
+//  var range       = sheet.getRange(2, 24, sheet.getLastRow() - 1, 2);
+//  var rule             = SpreadsheetApp.newDataValidation()
+//                       .requireValueInList(['Ready', 'Issue'], true)
+//                       .setHelpText('Ignore the warning you recieve if entering a name that is not present in the dropdown.')
+//                       .build();
+  
+  for (var i = 0; i < sheets.length; i++) {
+    var sheet = sheets[i];
+    
+    if (skip_sheets.indexOf(sheet.getSheetName()) !== -1) continue;
+    
+    sheet.insertColumnBefore(24);
+    formatting.copy
+    formatting.copyFormatToRange(sheet, 24, 24, 1, sheet.getLastRow());
+    sheet.getRange(2, 2).setValue('Ready');
+    sheet.setColumnWidth(2, columnWidth);
+//    var range = sheet.getRange(3, 2, sheet.getLastRow() - 2);
+//    range.setDataValidation(rule);
+//    conditionalRule1 = conditionalRule1.setRanges([range]).build();
+//    conditionalRule2 = conditionalRule2.setRanges([range]).build();
+//    sheet.setConditionalFormatRules([conditionalRule1, conditionalRule2].concat(sheet.getConditionalFormatRules()));
+//    return;
+  }
+}
 
 
 
