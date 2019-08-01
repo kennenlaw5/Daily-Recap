@@ -75,7 +75,7 @@ function newMonth() {
   var current, range, pass, year;
   var ss      = SpreadsheetApp.getActiveSpreadsheet();
   var sheets  = ss.getSheets();
-  var ignore  = ['SNAPSHOT', 'calc'];
+  var ignore  = ['SNAPSHOT', 'calc', 'Master'];
   var special = ['Deposit Log'];
   
   // Update the month to the next month
@@ -115,11 +115,11 @@ function newMonth() {
     if (pass) {
       current = ss.getSheetByName(current);
       current.showSheet();
-      current.getRange(3, 2, current.getLastRow(), 10).setValue('');
-      current.getRange(3, 2, current.getLastRow(), 10).clearNote();
+      current.getRange(3, 2, current.getLastRow() - 2, 10).setValue('');
+      current.getRange(3, 2, current.getLastRow() - 2, 10).clearNote();
       SpreadsheetApp.flush();
-      current.getRange(3, 13, current.getLastRow(), current.getLastColumn() - 11).setValue('');
-      current.getRange(3, 13, current.getLastRow(), current.getLastColumn() - 11).clearNote();
+      current.getRange(3, 13, current.getLastRow() - 2, current.getLastColumn() - 12).setValue('');
+      current.getRange(3, 13, current.getLastRow() - 2, current.getLastColumn() - 12).clearNote();
       SpreadsheetApp.flush();
       ss.toast('Wiped sheet "' + current.getSheetName() +'"', 'Completed:');
     }
@@ -156,15 +156,19 @@ function protectRanges() {
   var range, protection, protections;
   var ignore = ["SNAPSHOT","calc","Deposit Log","BROKER SHEET"];
   var me = Session.getEffectiveUser();
+  
   for (var i = 0; i < sheets.length; i++) {
     if (ignore.indexOf(sheets[i].getSheetName()) == -1) {
       protections = ss.getSheetByName(sheets[i].getSheetName()).getProtections(SpreadsheetApp.ProtectionType.RANGE);
+      
       for (var j = 0; j < protections.length; j++) {
         protection = protections[j];
+        
         if (protection.canEdit()) {
           protection.remove();
         }
       }
+      
       SpreadsheetApp.flush();
       range = ss.getSheetByName(sheets[i].getSheetName()).getRange("L:L");
       protection = range.protect().setDescription('Using formulas! Do NOT delete entire rows. Instead only clear out the data.');
@@ -268,10 +272,24 @@ function refreshManagerValidation() {
   }
 }
 
+function correctFormat() {
+  var ss          = SpreadsheetApp.getActiveSpreadsheet();
+  var sheets      = ss.getSheets();
+  var skip_sheets = ['SNAPSHOT', 'Deposit Log', 'BROKER SHEET', 'calc', 'Master'];
+  var master      = ss.getSheetByName('Master');
+  var formatRange = master.getRange(1, 1, master.getMaxRows(), master.getMaxColumns());
+  
+  for (var i = 0; i < sheets.length; i++) {
+    if (skip_sheets.indexOf(sheets[i].getSheetName()) !== -1) continue;
+    
+    formatRange.copyFormatToRange(sheets[i], 1, master.getMaxColumns(), 1, master.getMaxRows());
+  }
+}
+
 function addNewColumn() {
   var ss               = SpreadsheetApp.getActiveSpreadsheet();
   var sheets           = ss.getSheets();
-  var skip_sheets      = ['SNAPSHOT', 'Deposit Log', 'BROKER SHEET', 'calc', '26th', '27th', '29th', '30th'];
+  var skip_sheets      = ['SNAPSHOT', 'Deposit Log', 'BROKER SHEET', 'calc', '26th', '27th', '29th', '30th', '31st'];
   var sheet            = ss.getSheetByName('26th');
   var formatting       = sheet.getRange(1, 24, sheet.getLastRow());
   var columnWidth      = sheet.getColumnWidth(2);
@@ -287,10 +305,9 @@ function addNewColumn() {
     if (skip_sheets.indexOf(sheet.getSheetName()) !== -1) continue;
     
     sheet.insertColumnBefore(24);
-    formatting.copy
     formatting.copyFormatToRange(sheet, 24, 24, 1, sheet.getLastRow());
-    sheet.getRange(2, 2).setValue('Ready');
-    sheet.setColumnWidth(2, columnWidth);
+    sheet.getRange(2, 24).setValue('Time Dropped');
+    sheet.setColumnWidth(24, columnWidth);
 //    var range = sheet.getRange(3, 2, sheet.getLastRow() - 2);
 //    range.setDataValidation(rule);
 //    conditionalRule1 = conditionalRule1.setRanges([range]).build();

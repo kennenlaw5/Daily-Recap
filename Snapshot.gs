@@ -19,14 +19,14 @@ function snapshot31 (x,y) {
     sheet     = ss.getSheetByName(sheetName);
     
     if (sheet != null) {
-      range = sheet.getRange('C3:Z53').getValues();
+      range = sheet.getRange('C3:AA53').getValues();
       for (var j = 0; j < sheet.getLastRow() - 2; j++) {
         if (range[j][0] != '' && range[j][19] != '') {
           team = range[j][19];
           team = team.toString().replace('-', ' ');
           
-          if (range[j][23].toLowerCase().indexOf('yes') !== -1) { newCount[newCount.length - 1] ++; }
-          else if (range[j][23].toLowerCase() === 'no') { newF_I[newF_I.length - 1] ++; }
+          if (range[j][24].toLowerCase().indexOf('yes') !== -1) { newCount[newCount.length - 1] ++; }
+          else if (range[j][24].toLowerCase() === 'no') { newF_I[newF_I.length - 1] ++; }
           
           if (team === 'Merrie Thomsen')        { team = 0; }
           else if (team === 'Ben Brahler')      { team = 1; }
@@ -70,14 +70,14 @@ function snapshot22(x,y) {
     sheet     = ss.getSheetByName(sheetName);
     
     if ( sheet != null) {
-      range = sheet.getRange('C3:Z53').getValues();
+      range = sheet.getRange('C3:AA53').getValues();
       for (var j = 0; j < sheet.getLastRow() - 2; j++) {
         if (range[j][0] != '' && range[j][19] != '') {
           team = range[j][19];
           team = team.toString().replace('-', ' ');
           
-          if (range[j][23].toLowerCase().indexOf('yes') !== -1) { newCount[newCount.length - 1] ++; }
-          else if (range[j][23].toLowerCase() === 'no') { newF_I[newF_I.length - 1] ++; }
+          if (range[j][24].toLowerCase().indexOf('yes') !== -1) { newCount[newCount.length - 1] ++; }
+          else if (range[j][24].toLowerCase() === 'no') { newF_I[newF_I.length - 1] ++; }
           
           if (team === 'Merrie Thomsen')        { team = 0; }
           else if (team === 'Ben Brahler')      { team = 1; }
@@ -121,14 +121,14 @@ function snapshot15(x,y) {
     sheet     = ss.getSheetByName(sheetName);
     
     if ( sheet != null) {
-      range = sheet.getRange('C3:Z53').getValues();
+      range = sheet.getRange('C3:AA53').getValues();
       for (var j = 0; j < sheet.getLastRow() - 2; j++) {
         if (range[j][0] != '' && range[j][19] != '') {
           team = range[j][19];
           team = team.toString().replace('-', ' ');
           
-          if (range[j][23].toLowerCase().indexOf('yes') !== -1) { newCount[newCount.length - 1] ++; }
-          else if (range[j][23].toLowerCase() === 'no') { newF_I[newF_I.length - 1] ++; }
+          if (range[j][24].toLowerCase().indexOf('yes') !== -1) { newCount[newCount.length - 1] ++; }
+          else if (range[j][24].toLowerCase() === 'no') { newF_I[newF_I.length - 1] ++; }
           
           if (team === 'Merrie Thomsen')        { team = 0; }
           else if (team === 'Ben Brahler')      { team = 1; }
@@ -170,14 +170,14 @@ function snapshot7(x,y) {
     sheet     = ss.getSheetByName(sheetName);
     
     if ( sheet != null) {
-      range = sheet.getRange('C3:Z53').getValues();
+      range = sheet.getRange('C3:AA53').getValues();
       for (var j = 0; j < sheet.getLastRow() - 2; j++) {
         if (range[j][0] != '' && range[j][19] != '') {
           team = range[j][19];
           team = team.toString().replace('-', ' ');
           
-          if (range[j][23].toLowerCase().indexOf('yes') !== -1) { newCount[newCount.length - 1] ++; }
-          else if (range[j][23].toLowerCase() === 'no') { newF_I[newF_I.length - 1] ++; }
+          if (range[j][24].toLowerCase().indexOf('yes') !== -1) { newCount[newCount.length - 1] ++; }
+          else if (range[j][24].toLowerCase() === 'no') { newF_I[newF_I.length - 1] ++; }
           
           if (team === 'Merrie Thomsen')        { team = 0; }
           else if (team === 'Ben Brahler')      { team = 1; }
