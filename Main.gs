@@ -10,25 +10,23 @@ function onOpen() {
   if (month === sheetMonth) {
     ss.getSheetByName('SNAPSHOT').activate();
     SpreadsheetApp.flush();
-    ss.getSheetByName('Deposit Log').activate();
-    SpreadsheetApp.flush();
-    ss.getSheetByName('SNAPSHOT').activate();
-    SpreadsheetApp.flush();
     var day    = new Date().getDate();
     var sheets = ss.getSheets();
-    var name;
+    
     for (var i = 0; i < sheets.length; i++) {
-      if (sheets[i].getSheetName().indexOf(day) != -1) { name = sheets[i].activate(); break; }
+      if (sheets[i].getSheetName().indexOf(day) !== -1) { sheets[i].activate(); break; }
     }
   }
   
   ss.toast('The spreadsheet has loaded successfully! Have a great day!', 'Complete!');
-  ss.getSheetByName("calc").hideSheet();
+  ss.getSheetByName('calc').hideSheet();
 }
+
 function menuItem1() {
   //Created By Kennen Lawrence
   SpreadsheetApp.getUi().alert('Call or text (720) 317-5427');
 }
+
 function menuItem2() {
   //Created By Kennen Lawrence
   var ui = SpreadsheetApp.getUi();
@@ -51,79 +49,71 @@ function menuRefresh() {
   var sheet = ss.getSheetByName("calc");
   var range = sheet.getRange("M2");
   var data  = range.getValue();
-  range.setValue(parseInt(data)+1);
+  range.setValue(parseInt(data, 10) + 1);
 }
 
 function getName() {
   //Created By Kennen Lawrence
-  //Version 1.0
   var email = Session.getActiveUser().getEmail();
-  var name;var first;var last;
-  name = email.split("@schomp.com");
-  name=name[0];
-  name=name.split(".");
-  first=name[0];
-  last=name[1];
-  first= first[0].toUpperCase() + first.substring(1);
-  last=last[0].toUpperCase() + last.substring(1);
-  name=first+" "+last;
-  Logger.log(name);
-  return name;
+  var name  = email.split('@')[0].split('.');
+  var first = name[0][0].toUpperCase() + name[0].substring(1);
+  var last  = name[1][0].toUpperCase() + name[1].substring(1);
+  return first + ' ' + last;
 }
 
 function newMonth() {
-  var sheet, range, year, value;
   var ss          = SpreadsheetApp.getActiveSpreadsheet();
   var sheets      = ss.getSheets();
   var ignore      = ['SNAPSHOT', 'calc', 'Master'];
   var special     = ['Deposit Log'];
   var master      = ss.getSheetByName('Master');
   var formatRange = master.getRange(1, 1, master.getMaxRows(), master.getMaxColumns());
+  var sheet, numCol;
   
   // Update the month to the next month
-  range  = ss.getSheetByName(ignore[0]).getRange(2, 1);
-  value = range.getDisplayValue().split('/');
+  var range = ss.getSheetByName(ignore[0]).getRange(2, 1);
+  var year  = range.getDisplayValue().split('/');
   
-  for (var i = 0; i < value.length; i++) { value[i] = parseInt(value[i], 10); }
+  for (var i = 0; i < year.length; i++) { year[i] = parseInt(year[i], 10); }
   
-  if (value[0] === 12) {
-    value[0] = 1;
-    value[2] ++;
+  if (year[0] === 12) {
+    year[0] = 1;
+    year[2] ++;
   } else {
-    value[0] ++;
+    year[0] ++;
   }
   
-  value = value.join('/');
-  range.setValue(value);
+  year = year.join('/');
+  range.setValue(year);
   
   for (var i = 0; i < sheets.length; i++) {
     sheet = sheets[i];
     
     if (special.indexOf(sheet.getSheetName()) !== -1) {
       sheet.showSheet();
-      sheet.getRange(3, 2, sheet.getLastRow(), 6).setValue('');
-      sheet.getRange(3, 2, sheet.getLastRow(), 6).clearNote();
-      ss.toast('Wiped sheet "' + sheet.getSheetName() +'"', 'Completed:');
-    }
-    
-    if (ignore.indexOf(sheet.getSheetName()) === -1) {
+      numCol = 6;
+    } else if (ignore.indexOf(sheet.getSheetName()) === -1) {
       sheet.showSheet();
-      sheet.getRange(3, 2, sheet.getLastRow() - 2, 10).setValue('');
-      sheet.getRange(3, 2, sheet.getLastRow() - 2, 10).clearNote();
+      numCol = 10;
       sheet.getRange(3, 13, sheet.getLastRow() - 2, sheet.getLastColumn() - 12).setValue('');
       sheet.getRange(3, 13, sheet.getLastRow() - 2, sheet.getLastColumn() - 12).clearNote();
       formatRange.copyFormatToRange(sheet, 1, master.getMaxColumns(), 1, master.getMaxRows());
-      ss.toast('Wiped sheet "' + sheet.getSheetName() +'"', 'Completed:');
+    } else {
+      continue;
     }
+    
+    sheet.getRange(3, 2, sheet.getLastRow() - 2, numCol).setValue('');
+    sheet.getRange(3, 2, sheet.getLastRow() - 2, numCol).clearNote();
+    ss.toast('Wiped sheet "' + sheet.getSheetName() +'"', 'Completed:');
   }
   
   sheet = ss.getSheetByName(ignore[0]);
-  range = current.getRange(2, 1, 31, 2).getDisplayValues();
+  range = sheet.getRange(2, 1, 31, 2).getDisplayValues();
   
   for(i = 0; i < range.length; i++) {
-    value = parseInt(range[i][0].split('/')[1]);
+    var value = parseInt(range[i][0].split('/')[1]);
     
-    if (value < i || range[i][1] === 'Sunday') ss.getSheetByName(sheets[i + 2].getSheetName()).hideSheet();
+    if (value < i || range[i][1] === 'Sunday') sheets[i + 2].hideSheet();
   }
   
   menuRefresh();
