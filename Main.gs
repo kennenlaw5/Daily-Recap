@@ -231,7 +231,7 @@ function updateDailyGoals () {
 
 function refreshDataValidation() {
   var ignore = ['SNAPSHOT', 'calc', 'Deposit Log', 'BROKER SHEET'];
-  var validationCols = [5, 17, 23];
+  var validationCols = [5, 17, 24];
   var referenceCols = [24, 26, 25];
   var rules = [];
   var ss = SpreadsheetApp.getActiveSpreadsheet();
@@ -248,6 +248,8 @@ function refreshDataValidation() {
     validationCols.forEach(function (column, index) {
       sheet.getRange(3, column, sheet.getLastRow() - 2).setDataValidation(rules[index]);
     });
+    
+    ss.toast('Successfully updated validation!', 'Sheet: ' + sheet.getSheetName(), 5);
   });
 }
 
@@ -337,6 +339,7 @@ function freshStartFromMaster() {
     ss.moveActiveSheet(index + 3);
   });
   
+  refreshSnapshotFormulas();
   newMonth();
 }
 
@@ -369,6 +372,13 @@ function addNewColumn() {
   });
 }
 
-
-
-
+function refreshSnapshotFormulas() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getSheetByName('SNAPSHOT');
+  var range = sheet.getRange('D2:W32');
+  var formulas = range.getFormulas();
+  
+  range.setValue('');
+  SpreadsheetApp.flush();
+  range.setValues(formulas);
+}
