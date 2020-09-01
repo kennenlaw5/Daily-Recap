@@ -1,20 +1,23 @@
-function snapshotDriver() {
-  return {
-    columns: {
-      genius: 24,
-      manager: 19,
-      fandiGross: 12,
-      rebate: 18 
-    },
-    teams: [
-        'Ben Wegener',
-        'Ben Brahler',
-        'Joshua Buchanan',
-        'Ace Taylor Brown',
-        'MER'
-      ],
-  };
-}
+const driver = {
+  columns: {
+    vehicleType: 4,
+    genius: 25,
+    manager: 20,
+    fandiGross: 12,
+    rebate: 19
+  },
+  rows: {
+    first: 3,
+    last: 52
+  },
+  teams: [
+    'Ben Wegener',
+    'Ben Brahler',
+    'Jeff Englert',
+    'Ace TB',
+    'MER'
+  ],
+};
 
 function snapshot31 (x,y) {
   return snapshotCore(['23rd', '24th', '25th', '26th', '27th', '28th', '29th', '30th', '31st']);
@@ -31,56 +34,60 @@ function snapshot15(x,y) {
 function snapshot7(x,y) {
   return snapshotCore(['1st', '2nd', '3rd', '4th', '5th', '6th', '7th']);
 }
-//MGR=col 18; F_I=12; type=0
-//[0] mike[1] jeff[2] chris[3] dean[4]
 
-function snapshotCore(sheetNames) {
+function snapshotCore (sheetNames) {
   //Created By Kennen Lawrence
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var driver = snapshotDriver();
-  var sheet, sheetName, range, sheet;
-  var newCount  = [0, 0, 0, 0, 0, 0];
-  var newF_I    = [0, 0, 0, 0, 0, 0];
-  var cpoCount  = [0, 0, 0, 0, 0];
-  var cpoF_I    = [0, 0, 0, 0, 0];
-  var usedCount = [0, 0, 0, 0, 0];
-  var usedF_I   = [0, 0, 0, 0, 0];
-  var newPvr    = [];
-  var usedPvr   = [];
-  var cpoPvr    = [];
-  var team;
+  const newCount  = [0, 0, 0, 0, 0, 0];
+  const newF_I    = [0, 0, 0, 0, 0, 0];
+  const cpoCount  = [0, 0, 0, 0, 0];
+  const cpoF_I    = [0, 0, 0, 0, 0];
+  const usedCount = [0, 0, 0, 0, 0];
+  const usedF_I   = [0, 0, 0, 0, 0];
+  const newPvr    = [];
+  const usedPvr   = [];
+  const cpoPvr    = [];
   
-  sheetNames.forEach(function (sheetName) {
-    sheet = ss.getSheetByName(sheetName);
+  sheetNames.forEach(sheetName => {
+    const sheet = ss.getSheetByName(sheetName);
 
     if (!sheet) return;
     
-    rangeValues = sheet.getRange('D3:AB53').getValues();
+    const rangeValues = sheet.getRange(
+      driver.rows.first,
+      driver.columns.vehicleType,
+      driver.rows.last - driver.rows.first + 1,
+      driver.columns.genius + 1
+    ).getValues();
 
-    rangeValues.forEach(function (rowValues) {
+    rangeValues.forEach(rowValues => {
       if (rowValues[0] === '' && rowValues[driver.columns.manager] === '') return;
-      var value;
       
-      team = rowValues[driver.columns.manager].toString().replace('-', ' ');
-
-      value = rowValues[driver.columns.genius].toLowerCase();
+      let value = rowValues[driver.columns.genius].toString().toLowerCase();
+  
       if (value.indexOf('yes') !== -1) newCount[newCount.length - 1] ++;
       else if (value === 'no') newF_I[newF_I.length - 1] ++;
 
-      team = driver.teams.indexOf(team);
+      const team = driver.teams.indexOf(rowValues[driver.columns.manager].toString().replace('-', ' '));
+  
+      if (team === -1) return;
 
       value = parseInt(rowValues[driver.columns.fandiGross]) || 0;
-      if (rowValues[0].toLowerCase() === 'n' && team !== -1) {
-        newCount[team] ++;
-        newF_I[team] += value;
-      }
-      else if (rowValues[0].toLowerCase() === 'u' && team !== -1) {
-        usedCount[team] ++;
-        usedF_I[team] += value;
-      }
-      else if (rowValues[0].toLowerCase() === 'c' && team !== -1) {
-        cpoCount[team] ++;
-        cpoF_I[team] += value;
+  
+      switch(rowValues[0].toString().toLowerCase()) {
+        case 'n':
+          newCount[team] ++;
+          newF_I[team] += value;
+          break;
+        case 'u':
+          usedCount[team] ++;
+          usedF_I[team] += value;
+          break;
+        case 'c':
+          cpoCount[team] ++;
+          cpoF_I[team] += value;
+          break;
+        default:
+          return;
       }
     });
   });

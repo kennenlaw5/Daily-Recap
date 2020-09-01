@@ -1,7 +1,8 @@
+const ss = SpreadsheetApp.getActiveSpreadsheet();
+
 function onOpen() {
   //Created By Kennen Lawrence
   renderMenu();
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
   var date = new Date();
   var sheetMonth = ss.getSheetByName('SNAPSHOT').getRange(2, 1).getValue().getMonth();
   
@@ -51,7 +52,6 @@ function menuItem2() {
 }
 
 function snapshot() {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
   ss.setActiveSheet(ss.getSheetByName('SNAPSHOT'));
 }
 
@@ -123,13 +123,14 @@ function newMonth() {
   
   sheet = ss.getSheetByName(ignore[0]);
   dates = sheet.getRange(2, 1, 31, 2).getDisplayValues();
+  const offDays = ['Sunday', 'Monday']
 
   dates.forEach(function (date, index) {
     // dates is a 2d array so actual date is at the 0th position
     var weekday = parseInt(date[0].split('/')[1], 10);
 
     // If value < index then next month is bleeding in
-    if (weekday < index || date[1] === 'Sunday') sheets[index + 2].hideSheet();
+    if (weekday < index || offDays.includes(date[1])) sheets[index + 2].hideSheet();
   });
 
   ss.getSheetByName(ignore[1]).hideSheet();
@@ -140,7 +141,6 @@ function newMonth() {
 }
 
 function updateTradePVR() {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
   var ui = SpreadsheetApp.getUi();
   var link = ui.prompt('Trade PVR Link', 'Please paste the link for the new Trade PVR sheet in the box below:', ui.ButtonSet.OK_CANCEL);
   
@@ -180,7 +180,6 @@ function protectRanges(sheet) {
 }
 
 function fillFormulas() {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
   var sheets = ss.getSheets();
   var ignore = ['SNAPSHOT', 'calc', 'Deposit Log', 'BROKER SHEET'];
   var sheet, range, values, formula;
@@ -210,12 +209,12 @@ function fillFormulas() {
 function updateDailyGoals () {
   var dailyGoals = {
     sunday: 0,
-    monday: 15,
+    monday: 0,
     tuesday: 13,
-    wednesday: 17,
-    thursday: 15,
-    friday: 25,
-    saturday: 35
+    wednesday: 13,
+    thursday: 13,
+    friday: 15,
+    saturday: 20
   };
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('SNAPSHOT');
   var day = sheet.getRange(2, 1).getValue().getDay();
@@ -234,7 +233,6 @@ function refreshDataValidation() {
   var validationCols = [5, 17, 24];
   var referenceCols = [24, 26, 25];
   var rules = [];
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
   var sheet = ss.getSheetByName('SNAPSHOT');
 
   referenceCols.forEach(function (referenceCol) {
@@ -255,7 +253,6 @@ function refreshDataValidation() {
 
 function refreshManagerValidation() {
   var ignore = ['SNAPSHOT', 'Deposit Log', 'BROKER SHEET', 'calc'];
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
   var sheet = ss.getSheetByName('SNAPSHOT');
   var range = sheet.getRange(2, 25, sheet.getLastRow() - 1);
   var rule = SpreadsheetApp.newDataValidation().requireValueInRange(range, true).build();
@@ -317,7 +314,6 @@ function getParsedTeams(teams) {
 }
 
 function freshStartFromMaster() {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
   var ignoreSheets = ['Master', 'SNAPSHOT', 'Deposit Log', 'BROKER SHEET', 'calc']
   var masterSheet = ss.getSheetByName(ignoreSheets[0]);
   var sheets = ss.getSheets();
@@ -373,7 +369,6 @@ function addNewColumn() {
 }
 
 function refreshSnapshotFormulas() {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
   var sheet = ss.getSheetByName('SNAPSHOT');
   var range = sheet.getRange('D2:W32');
   var formulas = range.getFormulas();
@@ -381,4 +376,14 @@ function refreshSnapshotFormulas() {
   range.setValue('');
   SpreadsheetApp.flush();
   range.setValues(formulas);
+}
+
+function endMonth() {
+  const ignore = ['SNAPSHOT', 'calc', 'Master']
+  
+  ss.getSheets().forEach(function(sheet) {
+    if (ignore.includes(sheet.getSheetName())) return
+    
+    sheet.protect().setDescription('A sheet for the new month has been created. This sheet no longer reflects the current date range.').setWarningOnly(true)
+  })
 }
