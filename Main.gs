@@ -74,11 +74,10 @@ function getName() {
 }
 
 function newMonth() {
-  var ignore      = ['SNAPSHOT', 'calc', 'Master'];
-  var special     = ['Deposit Log'];
-  var ss          = SpreadsheetApp.getActiveSpreadsheet();
-  var sheets      = ss.getSheets();
-  var master      = ss.getSheetByName('Master');
+  var ignore = ['SNAPSHOT', 'calc', 'Master'];
+  var special = ['Deposit Log'];
+  var sheets = ss.getSheets();
+  var master = ss.getSheetByName('Master');
   var formatRange = master.getRange(1, 1, master.getMaxRows(), master.getMaxColumns());
   var sheet, numCol, dates;
   
@@ -97,6 +96,7 @@ function newMonth() {
   date = date.join('/');
   range.setValue(date);
 
+  // This should be able to be improved upon
   sheets.forEach(sheet => {
     if (special.includes(sheet.getSheetName())) {
       numCol = 6;
@@ -329,29 +329,35 @@ function confirmAction(messageKey) {
 function freshStartFromMaster() {
   if (!confirmAction('freshStartMaster')) return
   
-  var ignoreSheets = ['Master', 'SNAPSHOT', 'Deposit Log', 'BROKER SHEET', 'calc']
-  var masterSheet = ss.getSheetByName(ignoreSheets[0]);
-  var sheets = ss.getSheets();
-  var sheetNames = ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th', '9th', '10th', '11th', '12th', '13th', '14th', '15th', '16th', '17th', '18th', '19th', '20th', '21st', '22nd', '23rd', '24th', '25th', '26th', '27th', '28th', '29th', '30th', '31st'];
+  const ignoreSheets = ['Master', 'SNAPSHOT', 'Deposit Log', 'BROKER SHEET', 'calc']
+  const masterSheet = ss.getSheetByName(ignoreSheets[0]);
+  const sheets = ss.getSheets();
+  const sheetNames = ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th', '9th', '10th', '11th', '12th', '13th', '14th', '15th', '16th', '17th', '18th', '19th', '20th', '21st', '22nd', '23rd', '24th', '25th', '26th', '27th', '28th', '29th', '30th', '31st'];
   
-  sheets.forEach(function (sheet) {
-    if (ignoreSheets.indexOf(sheet.getSheetName()) === -1) ss.deleteSheet(sheet);
-  });
+  // Get calc sheet snapshot formulas and remove them to speed up execution
+  const snapshotRange = ss.getSheetByName(ignoreSheets[ignoreSheets.length - 1]).getRange(5, 12, 40)
+  const snapshotFormulas = snapshotRange.getFormulas()
+  snapshotRange.setValue('')
+  
+  sheets.forEach(sheet => {
+    if (!ignoreSheets.includes(sheet.getSheetName())) ss.deleteSheet(sheet)
+  })
   
   sheetNames.forEach(function (sheetName, index) {
-    var newSheet = masterSheet.copyTo(ss).setName(sheetName);
+    const newSheet = masterSheet.copyTo(ss).setName(sheetName);
     newSheet.activate()
     newSheet.getRange(1, 1, 2).setValues([
       ['=SNAPSHOT!B' + (index + 2)],
       ['=SNAPSHOT!A' + (index + 2)]
     ]);
     newSheet.getRange(1, 13).setValue('=SNAPSHOT!C' + (index + 2));
-    SpreadsheetApp.flush();
     ss.moveActiveSheet(index + 3);
   });
   
+  SpreadsheetApp.flush();
   refreshSnapshotFormulas();
   newMonth();
+  snapshotRange.setFormulas(snapshotFormulas)
 }
 
 function addNewColumn() {
