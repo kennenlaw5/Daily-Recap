@@ -86,9 +86,7 @@ function newMonth() {
   var range = ss.getSheetByName(ignore[0]).getRange(2, 1);
   var date  = range.getDisplayValue().split('/');
 
-  date = date.map(function (value) {
-    return parseInt(value, 10);
-  });
+  date = date.map(value => parseInt(value, 10));
 
   if (date[0] === 12) {
     date[0] = 0;
@@ -99,12 +97,10 @@ function newMonth() {
   date = date.join('/');
   range.setValue(date);
 
-  sheets.forEach(function (sheet) {
-    if (special.indexOf(sheet.getSheetName()) !== -1) {
-      sheet.showSheet();
+  sheets.forEach(sheet => {
+    if (special.includes(sheet.getSheetName())) {
       numCol = 6;
-    } else if (ignore.indexOf(sheet.getSheetName()) === -1) {
-      sheet.showSheet();
+    } else if (!ignore.includes(sheet.getSheetName())) {
       numCol = 11;
       sheet.getRange(3, 14, sheet.getLastRow() - 2, sheet.getLastColumn() - 13).setValue('');
       sheet.getRange(3, 14, sheet.getLastRow() - 2, sheet.getLastColumn() - 13).clearNote();
@@ -112,14 +108,15 @@ function newMonth() {
     } else {
       return
     }
-
+  
+    sheet.showSheet();
     sheet.getRange(3, 2, sheet.getLastRow() - 2, numCol).setValue('');
     sheet.getRange(3, 2, sheet.getLastRow() - 2, numCol).clearNote();
 
     protectRanges(sheet);
 
     ss.toast('Wiped sheet "' + sheet.getSheetName() +'"', 'Completed:');
-  });
+  })
   
   sheet = ss.getSheetByName(ignore[0]);
   dates = sheet.getRange(2, 1, 31, 2).getDisplayValues();
@@ -313,7 +310,25 @@ function getParsedTeams(teams) {
   return teams;
 }
 
+function confirmAction(messageKey) {
+  const ui = SpreadsheetApp.getUi()
+  const messages = {
+    freshStartMaster: {
+      title: 'Are you sure?',
+      message: 'You are about to refresh the sheet from the master base. Are you sure you want to proceed?',
+      buttonSet: ui.ButtonSet.YES_NO,
+      passes: response => response === ui.Button.YES,
+    }
+  }
+  const promptData = messages[messageKey]
+  const response = ui.alert(promptData.title, promptData.message, promptData.buttonSet)
+  
+  return promptData.passes(response)
+}
+
 function freshStartFromMaster() {
+  if (!confirmAction('freshStartMaster')) return
+  
   var ignoreSheets = ['Master', 'SNAPSHOT', 'Deposit Log', 'BROKER SHEET', 'calc']
   var masterSheet = ss.getSheetByName(ignoreSheets[0]);
   var sheets = ss.getSheets();
